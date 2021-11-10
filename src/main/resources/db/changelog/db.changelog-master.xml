@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="1636420680614-1" author="yinzhijun">
+        <sql>
+            create table user
+            (
+                id          bigint unsigned not null,
+                username    varchar(60) not null,
+                password    varchar(60) not null,
+                create_time datetime    not null,
+                update_time datetime null,
+                is_deleted  tinyint unsigned default 0 null,
+                constraint user_pk
+                    primary key (id)
+            );
+            create table post
+            (
+                id          bigint unsigned not null,
+                user_id     bigint unsigned not null,
+                content     varchar(255) not null,
+                title       varchar(255) not null,
+                create_time datetime     not null,
+                update_time datetime null,
+                is_deleted  tinyint unsigned default 0 null,
+                constraint post_pk
+                    primary key (id)
+            );
+            create index post_user_id_index
+                on post (user_id);
+
+            create table comment
+            (
+                id          bigint unsigned not null,
+                user_id     bigint unsigned not null,
+                post_Id     bigint unsigned not null,
+                content     text     not null,
+                create_time datetime not null,
+                update_time datetime null,
+                is_deleted  tinyint unsigned default 0 null,
+                constraint comment_pk
+                    primary key (id)
+            );
+
+            create index comment_user_id_index
+                on comment (user_id);
+        </sql>
+    </changeSet>
+    <changeSet id="1636456678927-1" author="yinzhijun">
+        <sql>
+            alter table comment
+                add pid bigint unsigned default 0 null after id;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
